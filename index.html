@@ -1,0 +1,108 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .user {
+            background: #f8f8f6;
+            height: fit-content;
+            width: fit-content;
+            padding: 6px;
+            border-radius: 6px;
+            margin-left: 80vw;
+            margin-top:20px;
+        }
+        .otheruser {
+            background: #c8dbe1;
+            height: fit-content;
+            width: fit-content;
+            padding: 6px;
+            border-radius: 6px;
+            margin-left: 10vw;
+            margin-top:10
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Socket server</h1>
+    <!-- <button onclick="ready()">Ready</button>
+    <button onclick="stop()">stop</button> -->
+    <input type="text" name="" id="name" placeholder="Enter your name"/>
+    <input type="text" name="" id="room" placeholder="Enter your room id"/>
+    <button onclick="join_room()">Join room</button><br>
+    <input type="text" name="" id="msg" />
+    <button onclick="msg()">send</button>
+    <div class="msg" id="msgbox" style="    background: #e6e4e4;
+    height: 80vh;
+    width: 100vw;
+    overflow: scroll;
+    ">
+
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+        integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+        crossorigin="anonymous"></script>
+    <script>
+
+
+
+
+        let socket = io('https://fair-lime-mussel-hem.cyclic.app/', {
+                withCredentials: false,
+                extraHeaders: {
+                    "my-custom-header": "abcd"
+                }
+            })
+        let room;
+        let username;
+        function join_room() {
+            room = document.querySelector("#room").value
+            username =document.querySelector("#name").value
+            socket.emit('join', room, username)
+        }
+        function msg() {
+            let msg = document.querySelector("#msg").value
+            socket.emit('msg', room, msg, socket.id, username)
+        }
+
+
+        socket.on('connect', () => {
+            console.log(socket.id);
+        })
+        socket.on('receivemsg', (msg, id, username) => {
+            console.log(msg);
+            var msgpart = document.createElement('div')
+            if (id === socket.id) {
+                msgpart.classList.add("user")
+            } else {
+                msgpart.classList.add("otheruser")
+
+            }
+            msgpart.innerText = `${username} :  ${msg}`
+            document.querySelector('#msgbox').appendChild(msgpart)
+            var elem = document.querySelector('#msgbox');
+            elem.scrollTop = elem.scrollHeight;
+        })
+        socket.on('rec', (data) => {
+            console.log(data);
+        })
+        socket.on('bc', (data) => {
+            console.log(data);
+            alert(data);
+        })
+        function stop() {
+            socket.emit('stop', socket.id)
+        }
+        function ready() {
+            socket.emit('ready', socket.id)
+        }
+
+    </script>
+</body>
+
+</html>
