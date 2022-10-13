@@ -1,13 +1,12 @@
 const app = require('express')();
 const http = require('http').Server(app);
-const cors= require('cors') 
+const cors = require('cors')
 app.use(cors())
 const io = require('socket.io')(http, {
     cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
+        origin: "*"
     },
-    
+
 });
 
 // io.origin((origin, callback) => {
@@ -29,23 +28,23 @@ app.get('/', function (req, res) {
 //Whenever someone connects this gets executed
 io.on('connection', function (socket) {
     console.log('A user connected');
-    
-    socket.in(room).emit("bc","a user connected")
+
+    socket.in(room).emit("bc", "a user connected")
     socket.on('ready', (id) => {
         console.log('your client is ready ..' + id);
-        
+
         socket.emit('rec', 'yaa i have a coonection with you')
-        
+
     })
     socket.on('stop', (id) => {
-        console.log('want to stop'+ id);
+        console.log('want to stop' + id);
     })
     socket.on('disconnect', () => {
         console.log('a user disconnected');
         socket.leave(room)
         io.in(room).emit("bc", "a user disconnected")
     })
-    socket.on('join', (roomname,username) => {
+    socket.on('join', (roomname, username) => {
         socket.join(roomname)
         room = roomname;
         io.in(room).emit("bc", `${username} connected`)
