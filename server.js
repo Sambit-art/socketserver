@@ -25,6 +25,8 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+
+
 //Whenever someone connects this gets executed
 io.on('connection', function (socket) {
     console.log('A user connected');
@@ -60,6 +62,6 @@ io.on('connection', function (socket) {
 //     console.log('emmited');
 // }, 10000);
 
-http.listen(3000, function () {
-    console.log('listening on *:3000');
+http.listen(5000, function () {
+    console.log('listening on *:5000');
 });
