@@ -62,6 +62,6 @@ io.on('connection', function (socket) {
 //     console.log('emmited');
 // }, 10000);
 
-http.listen(5000, function () {
-    console.log('listening on *:5000');
+http.listen(10000, function () {
+    console.log('listening on *:10000');
 });
