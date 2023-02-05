@@ -32,6 +32,7 @@ io.on('connection', function (socket) {
     console.log('A user connected');
 
     socket.in(room).emit("bc", "a user connected")
+    console.log('hello world');
     socket.on('ready', (id) => {
         console.log('your client is ready ..' + id);
 
